@@ -9,11 +9,23 @@ pygame.init()
 WIDTH = 800
 HEIGHT = 800
 
+START = False
+
 surface = pygame.display.set_mode( (WIDTH, HEIGHT) )
 pygame.display.set_caption('El juego de la vida.')
 
+current_second = 0
 sprites = pygame.sprite.Group()
-sprites.add(generate_cells(WIDTH, HEIGHT, 50, 50))
+
+cells = generate_cells(WIDTH, HEIGHT, 50, 50)
+sprites.add(cells)
+
+def start_algorithm(cells):
+    for row in cells:
+        for cell in row:
+            
+            if cell.life:
+                pass
 
 while True:
     time = pygame.time.get_ticks()
@@ -23,8 +35,29 @@ while True:
             pygame.quit()
 
             sys.exit()
-       
-    sprites.draw(surface)
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            current_position = pygame.mouse.get_pos()
+
+            for cell in sprites:
+                if cell.rect.collidepoint( current_position ):
+                    cell.select()
+
+        pressed = pygame.key.get_pressed()
+        if pressed[pygame.K_SPACE]:
+            START = True
+            print('Comenzamos con el algoritmo')
+
+    if START:
+        second = time // 1000
+
+        if second != current_second:
+            start_algorithm(cells)
+            
+            sprites.draw(surface)
+            current_second = second
+    else:
+        sprites.draw(surface)
 
     pygame.display.flip()
     pygame.display.update()

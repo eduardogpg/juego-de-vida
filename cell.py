@@ -1,28 +1,21 @@
 import pygame
 
-DEATH = (0, 0, 0)
-LIVE = (255, 255, 255)
+LIVE = (0, 0, 0)
+DEATH = (255, 255, 255)
+
 
 def generate_cells(width_screen, height_screen, width_cell, height_cell):
     cells = list()
-    current_pos_y = 1
 
-    for _ in range(0, height_screen // height_cell ):
+    for pos_x in range(0, height_screen // height_cell ):
         row = list()
-        current_pos_x = 0
 
-        for _ in range(0, width_screen // width_cell):
+        for pos_y in range(0, width_screen // width_cell):
 
-            cell = Cell(width_cell, height_cell, current_pos_x, current_pos_y)
-            current_pos_x = current_pos_x + 1 + width_cell
-
+            cell = Cell(width_cell, height_cell, pos_x, pos_y)
             row.append(cell)
 
-        current_pos_y = current_pos_y + 1 + height_cell
         cells.append(row)
-
-    print(len(cells[0]))
-    print(len(cells))
 
     return cells
 
@@ -38,18 +31,26 @@ class Cell(pygame.sprite.Sprite):
         self.width = width
         self.height = height
 
-        self.life = True
+        self.life = False
 
         self.update_rect()
     
     def update_rect(self):
         self.rect = self.get_image()
 
-        self.rect.x = self.pos_x
-        self.rect.y = self.pos_y
+        self.rect.x = self.pos_x * self.width 
+        self.rect.y = self.pos_y * self.height
 
     def get_image(self):
-        self.image = pygame.Surface( (self.width, self.height) )
-        self.image.fill( LIVE )
+        self.image = pygame.Surface( (self.width - 1, self.height - 1) )
         
+        if self.life:
+            self.image.fill( LIVE )
+        else:
+            self.image.fill( DEATH )
+
         return self.image.get_rect()
+
+    def select(self):
+        self.life = True
+        self.update_rect()
