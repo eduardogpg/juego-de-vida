@@ -18,14 +18,23 @@ current_second = 0
 sprites = pygame.sprite.Group()
 
 cells = generate_cells(WIDTH, HEIGHT, 50, 50)
+
 sprites.add(cells)
 
 def start_algorithm(cells):
     for row in cells:
         for cell in row:
             
+            neighborhoods = cell.get_neighborhoods(cells)
+
             if cell.life:
-                pass
+                if len(neighborhoods) == 2 or len(neighborhoods) == 3:
+                    pass
+                else:
+                    cell.select()
+            else:
+                if len(neighborhoods) == 3:
+                    cell.select()
 
 while True:
     time = pygame.time.get_ticks()
