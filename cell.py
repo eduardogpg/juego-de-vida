@@ -60,10 +60,11 @@ class Cell(pygame.sprite.Sprite):
         self.change()
         self.update()
 
-    def restar(self):
+    def restart(self):
         self.next_life = False
         self.life = False
-        self.change()
+        
+        self.update()
 
     def get_neighborhoods(self, cells):
         neighborhoods = list()
