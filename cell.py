@@ -18,6 +18,9 @@ def generate_cells(width_screen, height_screen, width_cell, height_cell):
 
         cells.append(rows)
 
+    print(len(cells))
+    print(len(cells[0]))
+
     return cells
 
 class Cell(pygame.sprite.Sprite):
@@ -34,6 +37,7 @@ class Cell(pygame.sprite.Sprite):
         self.height = height
 
         self.life = False
+        self.next_life = False
 
         self.update_rect()
     
@@ -54,23 +58,25 @@ class Cell(pygame.sprite.Sprite):
         return self.image.get_rect()
 
     def select(self):
-        self.life = not self.life
+        self.life = self.next_life
         self.update_rect()
+
+    def set_next_life(self):
+        self.next_life = not self.next_life
 
     def get_neighborhoods(self, cells):
         neighborhoods = list()
+        
+        for y in range(self.pos_y -1, self.pos_y + 2):
+            for x in range(self.pos_x - 1, self.pos_x + 2):
 
-        for x in range(self.pos_x -1, self.pos_x + 2):
-            for y in range(self.pos_y - 1, self.pos_y + 2):
-
-                if x >= 0 and y >= 0:
-                    if (x == self.pos_x and y == self.pos_y):
+                if self.pos_x == x and self.pos_y == y:
+                   pass
+                else:
+                    if (x < 0 or y < 0) or (x >= len(cells[0]) or y >= len(cells)):
                         pass
                     else:
-                        try:
-                            if cells[x][y].life:
-                                neighborhoods.append(cells[x][y])
-                        except:
-                            pass
-        
+                        if cells[x][y].life:
+                            neighborhoods.append(cells[x][y])
+
         return neighborhoods
