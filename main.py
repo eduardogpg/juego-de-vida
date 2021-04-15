@@ -6,12 +6,14 @@ from cell import generate_cells
 
 pygame.init()
 
-WIDTH = 800
-HEIGHT = 800
+WIDTH = 1200
+HEIGHT = 1200
 
 START = False
 
-FPS = 30 # frames per second setting
+FPS = 30
+REFRESH_PER_SECONDS = 200
+
 fps_clock = pygame.time.Clock()
 
 surface = pygame.display.set_mode( (WIDTH, HEIGHT) )
@@ -20,14 +22,9 @@ pygame.display.set_caption('El juego de la vida.')
 current_second = 0
 sprites = pygame.sprite.Group()
 
-cells = generate_cells(WIDTH, HEIGHT, 50, 50)
+cells = generate_cells(WIDTH, HEIGHT, 30, 30)
 
 sprites.add(cells)
-
-"""
-Una célula muerta con exactamente 3 células vecinas vivas "nace" (es decir, al turno siguiente estará viva).
-Una célula viva con 2 o 3 células vecinas vivas sigue viva, en otro caso muere (por "soledad" o "superpoblación").
-"""
 
 def start_algorithm(cells):
     for row in cells:
@@ -35,15 +32,13 @@ def start_algorithm(cells):
             neighborhoods = cell.get_neighborhoods(cells)
 
             if cell.life:
-                print(len(neighborhoods))
-
                 if len(neighborhoods) in (2, 3):
                     pass
                 else:
-                    cell.set_next_life()
+                    cell.change()
             else:
                 if len(neighborhoods) == 3:
-                    cell.set_next_life()
+                    cell.change()
 
 while True:
     time = pygame.time.get_ticks()
@@ -58,27 +53,28 @@ while True:
             current_position = pygame.mouse.get_pos()
 
             for cell in sprites:
-                if cell.rect.collidepoint( current_position ):
-                    cell.set_next_life()
+                if cell.rect.collidepoint(current_position):
                     cell.select()
 
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_SPACE]:
             START = True
-            print('Comenzamos con el algoritmo')
+        
+        # TODO RESTE GRID con E
 
     if START:
-        second = time // 1000
+        second = time // REFRESH_PER_SECONDS
 
         if second != current_second:
             start_algorithm(cells)
-            
-            sprites.draw(surface)
             current_second = second
 
         for row in cells:
             for cell in row:
-                cell.select()
+                cell.update()
+        
+        sprites.draw(surface)
+
     else:
         sprites.draw(surface)
 

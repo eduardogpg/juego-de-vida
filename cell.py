@@ -5,31 +5,22 @@ DEATH = (255, 255, 255)
 
 def generate_cells(width_screen, height_screen, width_cell, height_cell):
     cells = []
-    counter = 1
 
     for pos_x in range(0, width_screen //  width_cell):
         rows = []
 
         for pos_y in range(0, height_screen // height_cell):
-
-            cell = Cell(counter, width_cell, height_cell, pos_x, pos_y)
-            rows.append(cell)
-            counter += 1
+            rows.append(Cell(width_cell, height_cell, pos_x, pos_y))
 
         cells.append(rows)
-
-    print(len(cells))
-    print(len(cells[0]))
-
     return cells
 
 class Cell(pygame.sprite.Sprite):
 
-    def __init__(self, id, width, height, pos_x, pos_y):
+    def __init__(self, width, height, pos_x, pos_y):
 
         pygame.sprite.Sprite.__init__(self)
 
-        self.id = id
         self.pos_x = pos_x
         self.pos_y = pos_y
 
@@ -57,12 +48,16 @@ class Cell(pygame.sprite.Sprite):
 
         return self.image.get_rect()
 
-    def select(self):
+    def update(self):
         self.life = self.next_life
         self.update_rect()
 
-    def set_next_life(self):
+    def change(self):
         self.next_life = not self.next_life
+
+    def select(self):
+        self.change()
+        self.update()
 
     def get_neighborhoods(self, cells):
         neighborhoods = list()
