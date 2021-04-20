@@ -28,7 +28,7 @@ class Cell(pygame.sprite.Sprite):
         self.width = width
         self.height = height
 
-        self.ant = False
+        self.ant = None
         self.check = False
 
         self.update_rect()
@@ -41,8 +41,9 @@ class Cell(pygame.sprite.Sprite):
 
     def get_image(self):
         self.image = pygame.Surface( (self.width - 1, self.height - 1) )
-        
+
         if self.ant:
+            print('Aqui')
             self.image.fill( self.ant.color )
         
         else:
@@ -53,19 +54,15 @@ class Cell(pygame.sprite.Sprite):
 
         return self.image.get_rect()
 
-    def change(self):
-        self.next_life = not self.next_life
-
-    def select(self):
-        self.change()
-        self.update()
-
-    def restart(self):
-        self.next_life = False
-        self.life = False
-        
-        self.update()
-
     def set_ant(self, ant):
         self.ant = ant
+        self.update_rect()
+
+    def unset_ant(self):
+        self.ant = None
+        self.update_rect()
+
+    def set_check(self):
+        self.check = not self.check 
+
         self.update_rect()

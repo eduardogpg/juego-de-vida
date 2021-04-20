@@ -17,7 +17,7 @@ HEIGHT_CELL = 30
 START = False
 
 FPS = 30
-REFRESH_PER_SECONDS = 200
+REFRESH_PER_SECONDS = 1000
 
 fps_clock = pygame.time.Clock()
 
@@ -28,16 +28,12 @@ current_second = 0
 
 sprites = pygame.sprite.Group()
 
-ant = Ant(0, 0)
 cells = generate_cells(WIDTH, HEIGHT, WIDTH_CELL, HEIGHT_CELL)
 
-cell = cells[len(cells)// 2][len(cells[0])// 2]
-cell.set_ant(ant)
+ant = Ant(len(cells)//2, len(cells[0])// 2)
+ant.check(cells)
 
 sprites.add(cells)
-
-def start_algorithm():
-    pass
            
 while True:
     time = pygame.time.get_ticks()
@@ -54,7 +50,14 @@ while True:
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_SPACE]:
             START = True
-        
+    
+    if START:
+        second = time // REFRESH_PER_SECONDS
+
+        if second != current_second:
+            ant.check(cells)
+
+            current_second = second
 
     sprites.draw(surface)
 
