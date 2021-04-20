@@ -9,15 +9,15 @@ from ant import Ant
 pygame.init()
 
 WIDTH = 1200
-HEIGHT = 1000
+HEIGHT = 1200
 
-WIDTH_CELL = 30
-HEIGHT_CELL = 30
+WIDTH_CELL = 10
+HEIGHT_CELL = 10
 
 START = False
 
-FPS = 30
-REFRESH_PER_SECONDS = 1000
+FPS = 60
+REFRESH_PER_SECONDS = 5
 
 fps_clock = pygame.time.Clock()
 

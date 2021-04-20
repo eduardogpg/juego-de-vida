@@ -43,7 +43,6 @@ class Cell(pygame.sprite.Sprite):
         self.image = pygame.Surface( (self.width - 1, self.height - 1) )
 
         if self.ant:
-            print('Aqui')
             self.image.fill( self.ant.color )
         
         else:
@@ -64,5 +63,4 @@ class Cell(pygame.sprite.Sprite):
 
     def set_check(self):
         self.check = not self.check 
-
         self.update_rect()
