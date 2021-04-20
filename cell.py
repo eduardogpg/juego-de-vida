@@ -1,7 +1,7 @@
 import pygame
 
-LIVE = (0, 0, 0)
-DEATH = (255, 255, 255)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 
 def generate_cells(width_screen, height_screen, width_cell, height_cell):
     cells = []
@@ -28,8 +28,8 @@ class Cell(pygame.sprite.Sprite):
         self.width = width
         self.height = height
 
-        self.life = False
-        self.next_life = False
+        self.ant = False
+        self.check = False
 
         self.update_rect()
     
@@ -42,16 +42,16 @@ class Cell(pygame.sprite.Sprite):
     def get_image(self):
         self.image = pygame.Surface( (self.width - 1, self.height - 1) )
         
-        if self.life:
-            self.image.fill( LIVE )
+        if self.ant:
+            self.image.fill( self.ant.color )
+        
         else:
-            self.image.fill( DEATH )
+            if self.check:
+                self.image.fill( WHITE )
+            else:
+                self.image.fill( BLACK )
 
         return self.image.get_rect()
-
-    def update(self):
-        self.life = self.next_life
-        self.update_rect()
 
     def change(self):
         self.next_life = not self.next_life
@@ -66,15 +66,6 @@ class Cell(pygame.sprite.Sprite):
         
         self.update()
 
-    def get_neighborhoods(self, cells):
-        neighborhoods = list()
-        
-        for x in range(self.pos_x -1, self.pos_x + 2):
-            for y in range(self.pos_y - 1, self.pos_y + 2):
-               
-               if (x >= 0 and y >= 0) and (x < len(cells) and y < len(cells[0]) ):
-
-                    if not(x == self.pos_x and y == self.pos_y) and cells[x][y].life:
-                       neighborhoods.append(cells[x][y]) 
-
-        return neighborhoods
+    def set_ant(self, ant):
+        self.ant = ant
+        self.update_rect()

@@ -4,10 +4,15 @@ import pygame
 from cell import Cell
 from cell import generate_cells
 
+from ant import Ant
+
 pygame.init()
 
 WIDTH = 1200
-HEIGHT = 800
+HEIGHT = 1000
+
+WIDTH_CELL = 30
+HEIGHT_CELL = 30
 
 START = False
 
@@ -17,34 +22,23 @@ REFRESH_PER_SECONDS = 200
 fps_clock = pygame.time.Clock()
 
 surface = pygame.display.set_mode( (WIDTH, HEIGHT) )
-pygame.display.set_caption('Juego de la vida.')
+pygame.display.set_caption('La hormiga de Langton.')
 
 current_second = 0
+
 sprites = pygame.sprite.Group()
 
-cells = generate_cells(WIDTH, HEIGHT, 40, 40)
+ant = Ant(0, 0)
+cells = generate_cells(WIDTH, HEIGHT, WIDTH_CELL, HEIGHT_CELL)
+
+cell = cells[len(cells)// 2][len(cells[0])// 2]
+cell.set_ant(ant)
 
 sprites.add(cells)
 
 def start_algorithm():
-    for row in cells:
-        for cell in row:
-            neighborhoods = cell.get_neighborhoods(cells)
-
-            if cell.life:
-                if not len(neighborhoods) in (2, 3):
-                    cell.change()
-            else:
-                if len(neighborhoods) == 3:
-                    cell.change()
-
-    START = False
+    pass
            
-def update_cells():
-    for row in cells:
-        for cell in row:
-            cell.update()
-
 while True:
     time = pygame.time.get_ticks()
 
@@ -55,37 +49,12 @@ while True:
             sys.exit()
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            current_position = pygame.mouse.get_pos()
-
-            for cell in sprites:
-                if cell.rect.collidepoint(current_position):
-                    cell.select()
-                    print(cell.pos_x, cell.pos_y)
+            pass
 
         pressed = pygame.key.get_pressed()
         if pressed[pygame.K_SPACE]:
             START = True
         
-        # Restart Game!
-        if pressed[pygame.K_r] and START:
-            for row in cells:
-                for cell in row:
-                    cell.restart()
-            
-            START = False
-        
-        # Stop Algoritm
-        if pressed[pygame.K_s] and START:
-            START = False
-
-    if START:
-        second = time // REFRESH_PER_SECONDS
-
-        if second != current_second:
-            start_algorithm()
-            update_cells()
-
-            current_second = second
 
     sprites.draw(surface)
 
